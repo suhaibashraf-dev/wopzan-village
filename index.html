@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Wopzan Village | Community Portal | Anantnag, J&K</title>
+  <meta name="description" content="Official community portal of Wopzan Village. Share photos, post announcements, view village statistics, maps, and public services.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #fefefe;
+      color: #1c2b26;
+      line-height: 1.5;
+      scroll-behavior: smooth;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    /* Navigation */
+    .navbar {
+      background: #ffffff;
+      border-bottom: 1px solid #e2e9e4;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(0);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    }
+
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 32px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .logo {
+      font-weight: 700;
+      font-size: 1.4rem;
+      color: #1e5e3c;
+      letter-spacing: -0.3px;
+    }
+
+    .logo span {
+      font-weight: 400;
+      color: #557c66;
+      font-size: 0.85rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #2b463d;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: #1e5e3c;
+    }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(105deg, #f4f8f5 0%, #eef3ea 100%);
+      border-bottom: 1px solid #dfe8e2;
+      padding: 3.5rem 0;
+    }
+
+    .hero-content {
+      max-width: 780px;
+    }
+
+    .hero-badge {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: #2a734b;
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      color: #1b3e33;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-sub {
+      font-size: 1rem;
+      color: #3f6256;
+      border-left: 3px solid #328f58;
+      padding-left: 1rem;
+      margin: 1rem 0 1.5rem;
+    }
+
+    /* section titles */
+    .section {
+      padding: 4rem 0;
+      border-bottom: 1px solid #eaf0ec;
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: #1e4238;
+      margin-bottom: 2rem;
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-title:after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: #2c7a4d;
+      border-radius: 3px;
+    }
+
+    /* stats grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .stat-card {
+      background: white;
+      border: 1px solid #e5ede8;
+      border-radius: 20px;
+      padding: 1.3rem 1rem;
+      transition: all 0.2s;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: #5e7a6b;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #1f613f;
+    }
+
+    /* professional two column */
+    .two-col {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+    }
+
+    .info-card {
+      background: #fcfefb;
+      border: 1px solid #e2ece4;
+      border-radius: 24px;
+      padding: 1.8rem;
+    }
+
+    .info-card h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #1f5e3a;
+      margin-bottom: 1.2rem;
+      border-left: 4px solid #2a8c55;
+      padding-left: 1rem;
+    }
+
+    .info-list {
+      list-style: none;
+    }
+
+    .info-list li {
+      margin-bottom: 1rem;
+      display: flex;
+      gap: 0.75rem;
+      font-size: 0.95rem;
+      color: #2c423c;
+    }
+
+    .info-list li strong {
+      min-width: 110px;
+      font-weight: 600;
+      color: #1f3b32;
+    }
+
+    /* community features */
+    .community-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    .upload-card, .post-card {
+      background: #ffffff;
+      border: 1px solid #e2ece4;
+      border-radius: 28px;
+      padding: 1.8rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    label {
+      font-weight: 500;
+      font-size: 0.85rem;
+      color: #2c5c48;
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      border: 1px solid #cdddd2;
+      border-radius: 16px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      transition: 0.2s;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #328f58;
+      box-shadow: 0 0 0 2px rgba(50, 143, 88, 0.1);
+    }
+
+    .btn {
+      background: #1e5e3c;
+      color: white;
+      border: none;
+      padding: 0.65rem 1.4rem;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      background: #134b30;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: #eef3ef;
+      color: #1e5e3c;
+      border: 1px solid #c7ddcf;
+    }
+
+    /* gallery user */
+    .user-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .user-img-card {
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid #e6ede8;
+      transition: 0.2s;
+    }
+
+    .user-img-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .img-meta {
+      padding: 0.8rem;
+      font-size: 0.8rem;
+      color: #4f6a5e;
+      background: #fefefe;
+      border-top: 1px solid #f0f5f0;
+    }
+
+    /* posts feed */
+    .posts-feed {
+      margin-top: 2rem;
+      max-height: 480px;
+      overflow-y: auto;
+      padding-right: 6px;
+    }
+
+    .post-item {
+      background: #fbfef9;
+      border: 1px solid #e2ece2;
+      border-radius: 20px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .post-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: #5d7b6b;
+      margin-bottom: 0.5rem;
+    }
+
+    .post-message {
+      font-size: 0.9rem;
+      color: #1f3b32;
+    }
+
+    .empty-message {
+      text-align: center;
+      padding: 2rem;
+      color: #86a197;
+      font-size: 0.85rem;
+    }
+
+    .gallery-caption {
+      font-weight: 500;
+      margin-top: 0.3rem;
+    }
+
+    footer {
+      background: #1e2f29;
+      color: #cddfd6;
+      padding: 2rem 0;
+      text-align: center;
+      font-size: 0.8rem;
+    }
+
+    @media (max-width: 800px) {
+      .community-grid, .two-col {
+        grid-template-columns: 1fr;
+      }
+      .container {
+        padding: 0 20px;
+      }
+      .hero h1 {
+        font-size: 2.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-container">
+    <div class="logo">Wopzan<span> Village | Official Portal</span></div>
+    <div class="nav-links">
+      <a href="#home">Home</a>
+      <a href="#demographics">Stats</a>
+      <a href="#community">Community</a>
+      <a href="#gallery">Photos</a>
+      <a href="#location">Map</a>
+    </div>
+  </div>
+</nav>
+
+<main id="home">
+  <div class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge">- Wopzan | Bijbehara, Anantnag</div>
+        <h1>Wopzan Village<br>Community Information Hub</h1>
+        <div class="hero-sub">Official digital platform for villagers to share updates, upload village moments, and access public data. Empowering local voices.</div>
+        <div style="display: flex; gap: 0.8rem; flex-wrap: wrap; margin-top: 1rem;">
+          <span class="stat-badge" style="background:white; border-radius:40px; padding:0.3rem 1rem;">📍 Tehsil Bijbehara</span>
+          <span class="stat-badge" style="background:white; border-radius:40px; padding:0.3rem 1rem;">🌾 442 Hactares Land</span>
+          <span class="stat-badge" style="background:white; border-radius:40px; padding:0.3rem 1rem;">👥 3,310 residents</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Demographics Section -->
+  <div class="section" id="demographics">
+    <div class="container">
+      <h2 class="section-title">Demographic Profile</h2>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-label">Total Population</div><div class="stat-value">3,310</div></div>
+        <div class="stat-card"><div class="stat-label">Households</div><div class="stat-value">498</div></div>
+        <div class="stat-card"><div class="stat-label">Male / Female</div><div class="stat-value">1,655 / 1,645</div></div>
+        <div class="stat-card"><div class="stat-label">Children (0-6)</div><div class="stat-value">360</div></div>
+        <div class="stat-card"><div class="stat-label">Literacy Rate</div><div class="stat-value">89.2%</div></div>
+        <div class="stat-card"><div class="stat-label">Masjids</div><div class="stat-value">9</div></div>
+        <div class="stat-card"><div class="stat-label">Schools</div><div class="stat-value">4</div></div>
+        <div class="stat-card"><div class="stat-label">Land Area</div><div class="stat-value">442 Hactares</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Community contributions: upload photo + share information -->
+  <div class="section" id="community">
+    <div class="container">
+      <h2 class="section-title">Village Participation Hub</h2>
+      <div class="community-grid">
+        <!-- Upload Picture -->
+        <div class="upload-card">
+          <h3 style="font-size:1.25rem; margin-bottom:1rem;">📸 Share Village Photo</h3>
+          <div class="form-group">
+            <label>Your Name (optional)</label>
+            <input type="text" id="photoName" placeholder="e.g., Suhaib Ashraf">
+          </div>
+          <div class="form-group">
+            <label>Image caption</label>
+            <input type="text" id="photoCaption" placeholder="e.g., Harvest at Wopzan orchards">
+          </div>
+          <div class="form-group">
+            <label>Select Image (JPEG/PNG)</label>
+            <input type="file" id="photoInput" accept="image/jpeg,image/png,image/jpg">
+          </div>
+          <button class="btn" id="uploadPhotoBtn">+ Upload to Village Gallery</button>
+          <p style="font-size:0.7rem; margin-top:0.8rem; color:#6f8f81;">📌 Images are stored locally. Everyone visiting sees latest contributions.</p>
+        </div>
+
+        <!-- Share Information / Announcement -->
+        <div class="post-card">
+          <h3 style="font-size:1.25rem; margin-bottom:1rem;">📢 Share News / Announcement</h3>
+          <div class="form-group">
+            <label>Posted by</label>
+            <input type="text" id="postAuthor" placeholder="Name (gram sabha member / resident)">
+          </div>
+          <div class="form-group">
+            <label>Message / Information</label>
+            <textarea rows="3" id="postMessage" placeholder="e.g., Monthly meeting on 10th July at Panchayat Ghar..."></textarea>
+          </div>
+          <button class="btn" id="sharePostBtn">Publish to Community Board</button>
+        </div>
+      </div>
+
+      <!-- Live Community Board (posts feed) -->
+      <div style="margin-top: 2.5rem;">
+        <h3 style="font-size: 1.3rem; font-weight: 600; color:#1f5e3a; margin-bottom: 1rem;">📌 Community Announcements</h3>
+        <div id="postsFeed" class="posts-feed">
+          <!-- dynamic posts will appear here -->
+          <div class="empty-message">No announcements yet. Share the first update!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Photo Gallery (dynamic) + existing static gallery as inspiration -->
+  <div class="section" id="gallery">
+    <div class="container">
+      <h2 class="section-title">Village Photo Gallery (Community Uploads)</h2>
+      <div id="userGalleryContainer" class="user-gallery">
+        <!-- dynamically rendered images from localStorage -->
+        <div class="empty-message" style="grid-column:1/-1;">No photos uploaded yet. Be the first to share village moments.</div>
+      </div>
+      <hr style="margin: 2rem 0 1rem; border-color:#e0ece3;">
+      <p style="font-size:0.8rem; color:#4f7062;">🌟 Traditional views of Wopzan — contributed by residents</p>
+    </div>
+  </div>
+
+  <!-- Amenities and Infrastructure -->
+  <div class="section">
+    <div class="container">
+      <h2 class="section-title">Amenities & Public Services</h2>
+      <div class="two-col">
+        <div class="info-card"><h3>🏛️ Infrastructure</h3><ul class="info-list"><li><strong>Healthcare:</strong> PHC Wopzan (2+ beds)</li><li><strong>Water:</strong> Tap water coverage 100%</li><li><strong>Electricity:</strong> 24/7 + solar lights</li><li><strong>Banking:</strong> 2csc centers<li><strong>Roads:</strong> All-weather connectivity to Bijbehara</li></ul></div>
+        <div class="info-card"><h3>📚 Education & Social</h3><ul class="info-list"><li><strong>High School:</strong> Govt.high school Wopzan and Bright career modal academy wopzan </li><li><strong>Primary Schools:</strong> 1 Government + 1 Private</li><li><strong>Anganwadi:</strong> 3+ centres</li><li><strong></li><li><strong>Sports:</strong> Cricket/volleyball ground</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Map Location -->
+  <div class="section" id="location">
+    <div class="container">
+      <h2 class="section-title">Location & Access</h2>
+      <div style="border-radius: 28px; overflow: hidden; border: 1px solid #e2ece4;">
+        <iframe width="100%" height="400" style="border:0;" loading="lazy" allowfullscreen src="https://maps.google.com/maps?q=Wopzan+Village+Anantnag+Jammu+and+Kashmir&z=14&output=embed"></iframe>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 2rem; justify-content: space-between; background: #f8fbf8; border-radius: 20px; margin-top: 1.5rem; padding: 1rem 1.8rem;">
+        <div><strong>📌 Tehsil</strong><br>Bijbehara (5 km)</div>
+        <div><strong>🚆 Railway</strong><br>Anantnag (12 km)</div>
+        <div><strong>✈️ Airport</strong><br>Srinagar Intl. (58 km)</div>
+        <div><strong>📮 PIN</strong><br>192124</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <p>© 2026 Wopzan Village Official Portal | Bijbehara, Anantnag (J&K)</p>
+    <p style="margin-top: 0.5rem; font-size:0.75rem;">Community contributions are stored locally — every visitor sees uploaded photos & announcements.</p>
+  </div>
+</footer>
+
+<script>
+  // ---------- localStorage keys ----------
+  const STORAGE_POSTS = 'wopzan_community_posts';
+  const STORAGE_IMAGES = 'wopzan_gallery_images';
+
+  // load initial data
+  let posts = [];
+  let galleryImages = [];
+
+  function loadData() {
+    const storedPosts = localStorage.getItem(STORAGE_POSTS);
+    if(storedPosts) {
+      posts = JSON.parse(storedPosts);
+    } else {
+      // default sample posts to demonstrate
+      posts = [
+        { author: "Panchayat Secretary", message: "Monthly gram sabha scheduled on 15th July at Panchayat Ghar, 11 AM. All residents invited.", timestamp: new Date().toLocaleString() },
+        { author: "Youth Club Wopzan", message: "Cricket tournament from 20th July. Register before 15th July at community hall.", timestamp: new Date().toLocaleString() }
+      ];
+      savePosts();
+    }
+
+    const storedImages = localStorage.getItem(STORAGE_IMAGES);
+    if(storedImages) {
+      galleryImages = JSON.parse(storedImages);
+    } else {
+      // seed with some demo images (optional placeholders but not overriding actual)
+      galleryImages = [];
+      saveImages();
+    }
+    renderPosts();
+    renderGallery();
+  }
+
+  function savePosts() {
+    localStorage.setItem(STORAGE_POSTS, JSON.stringify(posts));
+  }
+
+  function saveImages() {
+    localStorage.setItem(STORAGE_IMAGES, JSON.stringify(galleryImages));
+  }
+
+  function renderPosts() {
+    const feedContainer = document.getElementById('postsFeed');
+    if(!feedContainer) return;
+    if(posts.length === 0) {
+      feedContainer.innerHTML = '<div class="empty-message">No announcements yet. Share the first update!</div>';
+      return;
+    }
+    feedContainer.innerHTML = posts.map(post => `
+      <div class="post-item">
+        <div class="post-header">
+          <span>👤 ${escapeHtml(post.author || 'Villager')}</span>
+          <span>📅 ${post.timestamp || 'just now'}</span>
+        </div>
+        <div class="post-message">${escapeHtml(post.message)}</div>
+      </div>
+    `).join('');
+  }
+
+  function renderGallery() {
+    const galleryContainer = document.getElementById('userGalleryContainer');
+    if(!galleryContainer) return;
+    if(galleryImages.length === 0) {
+      galleryContainer.innerHTML = '<div class="empty-message" style="grid-column:1/-1;">📷 No village photos uploaded yet. Use the upload form to share beautiful moments.</div>';
+      return;
+    }
+    galleryContainer.innerHTML = galleryImages.map(img => `
+      <div class="user-img-card">
+        <img src="${img.dataURL}" alt="Village photo">
+        <div class="img-meta">
+          <strong>${escapeHtml(img.caption || 'Village moment')}</strong><br>
+          📸 ${escapeHtml(img.author || 'Anonymous')} · ${img.date}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function escapeHtml(str) {
+    if(!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+      if(m === '&') return '&amp;';
+      if(m === '<') return '&lt;';
+      if(m === '>') return '&gt;';
+      return m;
+    }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+      return c;
+    });
+  }
+
+  // Upload photo logic
+  document.getElementById('uploadPhotoBtn')?.addEventListener('click', function() {
+    const fileInput = document.getElementById('photoInput');
+    const caption = document.getElementById('photoCaption').value.trim();
+    const authorName = document.getElementById('photoName').value.trim() || 'Villager';
+
+    if(!fileInput.files || fileInput.files.length === 0) {
+      alert('Please select an image to upload.');
+      return;
+    }
+    const file = fileInput.files[0];
+    if(!file.type.startsWith('image/')) {
+      alert('Only image files are allowed.');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const dataURL = e.target.result;
+      galleryImages.unshift({
+        dataURL: dataURL,
+        caption: caption || 'Shared from Wopzan',
+        author: authorName,
+        date: new Date().toLocaleString()
+      });
+      // keep only latest 30 images to avoid huge storage
+      if(galleryImages.length > 40) galleryImages = galleryImages.slice(0,40);
+      saveImages();
+      renderGallery();
+      // clear inputs
+      document.getElementById('photoCaption').value = '';
+      document.getElementById('photoName').value = '';
+      fileInput.value = '';
+      alert('Photo added to village gallery!');
+    };
+    reader.onerror = function() {
+      alert('Failed to read image.');
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // Share post / information
+  document.getElementById('sharePostBtn')?.addEventListener('click', function() {
+    const author = document.getElementById('postAuthor').value.trim();
+    const message = document.getElementById('postMessage').value.trim();
+    if(!message) {
+      alert('Please write some information to share.');
+      return;
+    }
+    const newPost = {
+      author: author || 'Resident',
+      message: message,
+      timestamp: new Date().toLocaleString()
+    };
+    posts.unshift(newPost);
+    savePosts();
+    renderPosts();
+    document.getElementById('postAuthor').value = '';
+    document.getElementById('postMessage').value = '';
+    alert('Announcement published to Community Board!');
+  });
+
+  loadData();
+</script>
+
+<!-- optional sample note: all data persistent -->
+</body>
+</html>
