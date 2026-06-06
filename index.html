@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Wopzan | The Jewel of Anantnag</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <style>
+        /* Modern Reset & Smooth Scrolling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-deep: #0b3c26;
+            --primary-medium: #135237;
+            --primary-light: #1b6b4a;
+            --gold-premium: #dfb15b;
+            --gold-light: #f7e7c4;
+            --bg-soft: #faf8f5;
+            --text-dark: #1c2621;
+            --text-muted: #53635b;
+            --glass-card: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(223, 177, 91, 0.25);
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --shadow-smooth: 0 12px 40px -12px rgba(11, 60, 38, 0.08);
+            --shadow-hover: 0 24px 48px -12px rgba(11, 60, 38, 0.16);
+            --transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-soft);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Ambient Dynamic Background for Hero Section */
+        @keyframes subtleGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #072618, #0b3c26, #165639, #234433);
+            background-size: 200% 200%;
+            animation: subtleGradient 15s ease infinite;
+            border-radius: 0 0 4rem 4rem;
+            padding: 6rem 1.5rem 8rem 1.5rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(7, 38, 24, 0.15);
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(to top, var(--bg-soft), transparent);
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 1rem;
+            color: #ffffff;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        /* Luxury Glassmorphism Cards */
+        .glass-card {
+            background: var(--glass-card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-smooth);
+            transition: var(--transition-smooth);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--gold-premium);
+        }
+
+        /* Elegant Section Titles */
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--primary-deep);
+            margin-bottom: 2rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 50px;
+            height: 4px;
+            background: var(--gold-premium);
+            border-radius: 2px;
+            transition: var(--transition-smooth);
+        }
+
+        .section-title:hover::after {
+            width: 100%;
+        }
+
+        /* Statistics Cards */
+        .stat-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 2rem 1.5rem;
+            text-align: center;
+            transition: var(--transition-smooth);
+            box-shadow: var(--shadow-smooth);
+            border: 1px solid rgba(11, 60, 38, 0.03);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gold-premium);
+            transform: scaleX(0);
+            transition: var(--transition-smooth);
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .stat-card i {
+            font-size: 2.5rem;
+            color: var(--primary-medium);
+            margin-bottom: 1rem;
+            transition: var(--transition-smooth);
+        }
+
+        .stat-card:hover i {
+            color: var(--gold-premium);
+            transform: scale(1.1);
+        }
+
+        /* Modern Badges for Amenities */
+        .facility-badge {
+            background: white;
+            border-radius: 50px;
+            padding: 0.8rem 1.6rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-weight: 600;
+            color: var(--primary-deep);
+            box-shadow: var(--shadow-smooth);
+            transition: var(--transition-smooth);
+            border: 1px solid rgba(11, 60, 38, 0.05);
+        }
+
+        .facility-badge:hover {
+            transform: translateY(-3px) scale(1.03);
+            background: var(--primary-deep);
+            color: #ffffff;
+            border-color: var(--primary-deep);
+        }
+
+        /* Emergency Numbers Styling */
+        .emergency-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .emergency-item {
+            background: white;
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            text-align: center;
+            font-weight: 600;
+            transition: var(--transition-smooth);
+            border-left: 4px solid var(--primary-medium);
+            box-shadow: var(--shadow-smooth);
+        }
+
+        .emergency-item:hover {
+            transform: translateX(4px);
+            border-left-color: var(--gold-premium);
+            background: var(--gold-light);
+        }
+
+        /* Premium Gallery Architecture */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .gallery-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-smooth);
+            transition: var(--transition-smooth);
+            position: relative;
+            cursor: pointer;
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+
+        .gallery-card img {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .gallery-card:hover img {
+            transform: scale(1.08);
+        }
+
+        .gallery-card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* Notice Board Upgrades */
+        .announcement-item {
+            background: white;
+            border-radius: var(--radius-md);
+            padding: 1.2rem 1.5rem;
+            margin-bottom: 1.2rem;
+            border-left: 4px solid var(--gold-premium);
+            transition: var(--transition-smooth);
+            box-shadow: var(--shadow-smooth);
+        }
+
+        .announcement-item:hover {
+            transform: translateX(8px);
+            border-left-color: var(--primary-deep);
+            background: #fafcfb;
+        }
+
+        /* Buttons with Metallic Glow */
+        .btn-grad {
+            background: linear-gradient(135deg, var(--primary-deep), var(--primary-medium));
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 0.9rem 2.2rem;
+            border-radius: 50px;
+            transition: var(--transition-smooth);
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(11, 60, 38, 0.2);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .btn-grad:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 32px rgba(11, 60, 38, 0.3);
+            background: linear-gradient(135deg, var(--primary-medium), var(--primary-light));
+        }
+
+        /* Interactive Lightbox Overlay */
+        .lightbox-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(7, 24, 16, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+        .lightbox-modal.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        .lightbox-container {
+            max-width: 85%;
+            max-height: 85%;
+            position: relative;
+        }
+        .lightbox-img {
+            max-width: 100%;
+            max-height: 80vh;
+            border-radius: var(--radius-md);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+            transform: scale(0.95);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .lightbox-modal.active .lightbox-img {
+            transform: scale(1);
+        }
+        .lightbox-close {
+            position: absolute;
+            top: -50px;
+            right: 0;
+            color: #fff;
+            font-size: 32px;
+            cursor: pointer;
+            background: rgba(255,255,255,0.1);
+            width: 44px;
+            height: 44px;
+            line-height: 42px;
+            text-align: center;
+            border-radius: 50%;
+            transition: var(--transition-smooth);
+        }
+        .lightbox-close:hover {
+            background: var(--gold-premium);
+            color: var(--primary-deep);
+        }
+
+        /* Modern Popup Modal */
+        .modal-pop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(7, 24, 16, 0.6);
+            backdrop-filter: blur(15px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            visibility: hidden;
+            opacity: 0;
+            transition: var(--transition-smooth);
+        }
+        .modal-pop.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        .modal-content {
+            background: #ffffff;
+            max-width: 420px;
+            width: 90%;
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            text-align: center;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.25);
+            border: 1px solid var(--gold-light);
+            animation: modalFadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes modalFadeUp {
+            from { transform: translateY(40px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        footer {
+            background: var(--primary-deep);
+            color: #e2f0e6;
+            padding: 3rem 2rem;
+            border-radius: 3rem 3rem 0 0;
+            margin-top: 5rem;
+            border-top: 2px solid var(--gold-premium);
+        }
+
+        /* Form Controls */
+        input[type="text"], textarea {
+            font-family: inherit;
+            width: 100%;
+            padding: 14px 20px;
+            border-radius: 30px;
+            border: 1px solid #e1e8e4;
+            background: #fcfbfa;
+            color: var(--text-dark);
+            transition: var(--transition-smooth);
+            font-weight: 500;
+        }
+        input[type="text"]:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-medium);
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(19, 82, 55, 0.08);
+        }
+
+        @media (max-width: 768px) {
+            .section-title { font-size: 1.9rem; }
+            .hero h1 { font-size: 2.6rem; }
+            nav { padding: 1rem !important; }
+            nav div:last-child { gap: 1rem !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="imageLightbox" class="lightbox-modal">
+    <div class="lightbox-container">
+        <span class="lightbox-close" id="closeLightboxBtn">×</span>
+        <img src="" id="lightboxMainImg" class="lightbox-img" alt="Wopzan Interactive View">
+    </div>
+</div>
+
+<div id="instaModal" class="modal-pop">
+    <div class="modal-content">
+        <i class="fab fa-instagram" style="font-size: 3.5rem; background: linear-gradient(45deg, #f09433, #d62976, #962fbf); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 0.5rem;"></i>
+        <h2 style="font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 0.5rem; color: var(--primary-deep)">🌄 Wopzan Diaries</h2>
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">Connect with our rich village life, landscapes & culture updates.</p>
+        <a href="https://instagram.com/suuihaib" target="_blank" style="text-decoration: none;">
+            <div class="btn-grad" style="background: linear-gradient(45deg, #f09433, #e1306c);">
+                <i class="fab fa-instagram"></i> Follow @suuihaib
+            </div>
+        </a>
+        <button id="closeModalBtn" style="margin-top: 1.5rem; background: none; border: none; cursor: pointer; color: var(--text-muted); font-weight: 600; font-size: 0.9rem; display: block; width: 100%;">Skip for now</button>
+    </div>
+</div>
+
+<nav style="display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 6%; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(11, 60, 38, 0.05); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02);">
+    <div style="font-family: 'Playfair Display', serif; font-weight: 800; font-size: 2rem; color: var(--primary-deep)">Wopzan<span style="color: var(--gold-premium)">.</span></div>
+    <div style="display: flex; gap: 2.5rem;">
+        <a href="#home" style="text-decoration: none; font-weight: 600; color: var(--primary-deep); font-size: 0.95rem; transition: var(--transition-smooth);"><i class="fas fa-home" style="color: var(--gold-premium)"></i> Home</a>
+        <a href="#amenities" style="text-decoration: none; font-weight: 600; color: var(--primary-deep); font-size: 0.95rem; transition: var(--transition-smooth);"><i class="fas fa-leaf" style="color: var(--gold-premium)"></i> Amenities</a>
+        <a href="#gallery" style="text-decoration: none; font-weight: 600; color: var(--primary-deep); font-size: 0.95rem; transition: var(--transition-smooth);"><i class="fas fa-images" style="color: var(--gold-premium)"></i> Gallery</a>
+        <a href="#announce" style="text-decoration: none; font-weight: 600; color: var(--primary-deep); font-size: 0.95rem; transition: var(--transition-smooth);"><i class="fas fa-bullhorn" style="color: var(--gold-premium)"></i> Updates</a>
+    </div>
+</nav>
+
+<div class="hero" id="home">
+    <div style="max-width: 1200px; margin: 0 auto;" data-aos="fade-up" data-aos-duration="1200">
+        <h1>The Jewel of Anantnag</h1>
+        <p style="font-size: 1.3rem; margin-top: 0.5rem; color: var(--gold-light); font-weight: 500; letter-spacing: 1px; text-transform: uppercase;">Tehsil Bijbehara • District Anantnag • Kashmir Valley</p>
+        <p style="max-width: 650px; margin: 1.5rem auto 0; font-size: 1.1rem; line-height: 1.7; opacity: 0.9; font-weight: 400;">A harmony of timeless heritage and sustainable progress. Nestled amidst pristine green landscapes, built on thriving community values.</p>
+    </div>
+</div>
+
+<main style="max-width: 1300px; margin: 0 auto; padding: 0 4%;">
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; margin: -4rem 0 4rem; position: relative; z-index: 10;">
+        <div class="stat-card" data-aos="zoom-in" data-aos-delay="0"><i class="fas fa-users"></i><h3 style="font-size: 2.2rem; font-weight: 800; color: var(--primary-deep)">3,310</h3><p style="color: var(--text-muted); font-weight: 500;">Total Population</p><small style="color: var(--primary-medium); font-weight: 600;">♂ 1,660 | ♀ 1,650</small></div>
+        <div class="stat-card" data-aos="zoom-in" data-aos-delay="100"><i class="fas fa-home"></i><h3 style="font-size: 2.2rem; font-weight: 800; color: var(--primary-deep)">498</h3><p style="color: var(--text-muted); font-weight: 500;">Active Households</p></div>
+        <div class="stat-card" data-aos="zoom-in" data-aos-delay="200"><i class="fas fa-graduation-cap"></i><h3 style="font-size: 2.2rem; font-weight: 800; color: var(--primary-deep)">90.2%</h3><p style="color: var(--text-muted); font-weight: 500;">Literacy Rate</p></div>
+        <div class="stat-card" data-aos="zoom-in" data-aos-delay="300"><i class="fas fa-globe-asia"></i><h3 style="font-size: 2.2rem; font-weight: 800; color: var(--primary-deep)">442.2 ha</h3><p style="color: var(--text-muted); font-weight: 500;">Total Land Area</p></div>
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 2.5rem; margin-bottom: 5rem;">
+        <div style="flex: 1.6; min-width: 300px;" data-aos="fade-right">
+            <div class="glass-card" style="padding: 2.5rem; height: 100%;">
+                <h3 style="font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 1.2rem; color: var(--primary-deep)"><i class="fas fa-tree" style="color: var(--gold-premium);"></i> About Wopzan</h3>
+                <p style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.75; text-align: justify;">Wopzan is a beautiful village located in Bijbehara of Anantnag, in the union territory of Jammu and Kashmir. Surrounded by the natural beauty of the Kashmir Valley, the village is known for its peaceful atmosphere, green fields, and hardworking people. Agriculture and horticulture play an important role in the lives of the residents, with many families engaged in farming and fruit cultivation. The people of Wopzan are known for their hospitality, strong community spirit, and rich cultural traditions. The village reflects the beauty and heritage of rural Kashmir, where traditional values, scenic landscapes, and a close-knit community create a pleasant and harmonious way of life.</p>
+                <div style="margin-top: 1.8rem; padding: 1rem; background: rgba(223, 177, 91, 0.08); border-radius: var(--radius-md); border-left: 4px solid var(--gold-premium);">
+                    <p style="color: var(--primary-deep); font-weight: 600;"><i class="fas fa-mosque"></i> <strong>Markaz Masjid:</strong> Muhammadi Jamia Ahlihades Wopzan</p>
+                </div>
+            </div>
+        </div>
+        <div style="flex: 1; min-width: 280px;" data-aos="fade-left">
+            <div class="glass-card" style="padding: 2.5rem;">
+                <h3 style="font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--primary-deep); margin-bottom: 1rem;"><i class="fas fa-mosque" style="color:var(--gold-premium);"></i> Spiritual Center</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 0.5rem;"><strong>Markaz:</strong> Muhammadi Jamia Ahlihades Wopzan</p>
+                <p style="color: var(--primary-medium); font-weight: 600;"><i class="fas fa-plus"></i> 8 Community Mosques Setup</p>
+                <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid #eef2f0;">
+                <h3 style="font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--primary-deep); margin-bottom: 1rem;"><i class="fas fa-school" style="color: var(--gold-premium)"></i> Educational Institutions</h3>
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.8rem;">
+                    <li style="color: var(--text-muted); font-weight: 500;"><i class="fas fa-graduation-cap" style="color: var(--primary-medium)"></i> Govt. Middle School Wopzan</li>
+                    <li style="color: var(--text-muted); font-weight: 500;"><i class="fas fa-graduation-cap" style="color: var(--primary-medium)"></i> Govt. High School Wopzan</li>
+                    <li style="color: var(--text-muted); font-weight: 500;"><i class="fas fa-graduation-cap" style="color: var(--primary-medium)"></i> Arabian International School</li>
+                    <li style="color: var(--text-muted); font-weight: 500;"><i class="fas fa-graduation-cap" style="color: var(--primary-medium)"></i> Bright Career Model Academy</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="amenities" style="margin: 4rem 0;" data-aos="fade-up">
+        <h2 class="section-title"><i class="fas fa-cogs" style="color: var(--gold-premium)"></i> Infrastructure & Civic Sports</h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 1.2rem; margin-bottom: 2rem;">
+            <div class="facility-badge"><i class="fas fa-bolt" style="color: #f1c40f"></i> 24/7 Secure Grid Power</div>
+            <div class="facility-badge"><i class="fas fa-tint" style="color: #3498db"></i> Filtered Clean Water Supply</div>
+            <div class="facility-badge"><i class="fas fa-lightbulb" style="color: #f39c12"></i> Auto LED Street Luminaires</div>
+            <div class="facility-badge"><i class="fas fa-futbol" style="color: #2ecc71"></i> Integrated Cricket Oval Ground</div>
+            <div class="facility-badge"><i class="fas fa-volleyball-ball" style="color: #e67e22"></i> Premium Volleyball Arena</div>
+            <div class="facility-badge"><i class="fas fa-charging-station" style="color: #9b59b6"></i> Modern Smart Village Hub</div>
+        </div>
+    </div>
+
+    <div style="margin: 4rem 0;" data-aos="fade-up">
+        <h2 class="section-title"><i class="fas fa-phone-alt" style="color: var(--gold-premium)"></i> Emergency & Safety Directory</h2>
+        <div class="emergency-grid">
+            <div class="emergency-item"><i class="fas fa-ambulance" style="font-size: 1.8rem; color: #e74c3c; margin-bottom: 0.5rem; display:block;"></i> Ambulance Service<br><strong style="font-size: 1.1rem; color: var(--primary-deep);">108 / 102</strong></div>
+            <div class="emergency-item"><i class="fas fa-shield-alt" style="font-size: 1.8rem; color: #2980b9; margin-bottom: 0.5rem; display:block;"></i> Police Department<br><strong style="font-size: 1.1rem; color: var(--primary-deep);">01932-222250</strong></div>
+            <div class="emergency-item"><i class="fas fa-fire-extinguisher" style="font-size: 1.8rem; color: #d35400; margin-bottom: 0.5rem; display:block;"></i> Fire Control Operations<br><strong style="font-size: 1.1rem; color: var(--primary-deep);">101 / 112</strong></div>
+            <div class="emergency-item"><i class="fas fa-hospital-user" style="font-size: 1.8rem; color: #27ae60; margin-bottom: 0.5rem; display:block;"></i> Primary Health (PHC)<br><strong style="font-size: 1.1rem; color: var(--primary-deep);">94190-12345</strong></div>
+        </div>
+    </div>
+
+    <div id="announce" style="margin: 5rem 0;" data-aos="fade-up">
+        <h2 class="section-title"><i class="fas fa-bullhorn" style="color: var(--gold-premium)"></i> Digital Notice Board</h2>
+        <div class="glass-card" style="padding: 2.5rem;">
+            <form id="announceForm" style="display:flex; flex-direction:column; gap: 1rem;">
+                <input type="text" id="announceTitle" placeholder="📢 Title (e.g., Gram Sabha Assembly Scheduled)" required>
+                <textarea id="announceDesc" rows="3" placeholder="Compose brief description details about the announcement..." required style="border-radius:20px; resize:none;"></textarea>
+                <div style="text-align: right;">
+                    <button type="submit" class="btn-grad"><i class="fas fa-plus-circle"></i> Broadcast Notice</button>
+                </div>
+            </form>
+            <div id="announcementsList" style="margin-top: 2.5rem; max-height: 450px; overflow-y: auto; padding-right: 5px;"></div>
+        </div>
+    </div>
+
+    <div id="gallery" style="margin: 5rem 0;" data-aos="fade-up">
+        <h2 class="section-title"><i class="fas fa-images" style="color: var(--gold-premium)"></i> Media & Landscape Repository</h2>
+        <div class="glass-card" style="padding: 2.5rem;">
+            <div style="display: flex; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; align-items: center; margin-bottom: 2rem; border-bottom: 1px dashed rgba(11, 60, 38, 0.1); padding-bottom: 1.5rem;">
+                <p style="color: var(--text-muted); font-weight: 500;">Contribute to our visual library. Upload seasonal photos, agricultural events, or architectural marvels. 🖼️</p>
+                <label class="btn-grad" style="background: linear-gradient(135deg, var(--gold-premium), #cfa04b); color: var(--primary-deep); font-weight: 700; box-shadow: 0 8px 24px rgba(223, 177, 91, 0.2);"><i class="fas fa-upload"></i> Upload Media Asset
+                    <input type="file" id="imageUploadInput" accept="image/jpeg,image/png,image/jpg" style="display: none;">
+                </label>
+            </div>
+            <div id="galleryGrid" class="gallery-grid"></div>
+        </div>
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 2.5rem; margin: 4rem 0;">
+        <div style="flex: 1.4; min-width: 300px;" data-aos="fade-right">
+            <h2 class="section-title"><i class="fas fa-map-marked-alt" style="color: var(--gold-premium)"></i> Cartographic Map</h2>
+            <div id="villageMap" style="height: 320px; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-smooth); border: 1px solid var(--glass-border);"></div>
+            <p style="margin-top: 12px;"><a href="https://maps.google.com" target="_blank" style="color: var(--primary-medium); font-weight: 700; text-decoration: none; font-size: 0.95rem;"><i class="fas fa-external-link-alt"></i> Navigate using native Google Maps</a></p>
+        </div>
+        <div style="flex: 1; min-width: 260px;" data-aos="fade-up">
+            <h2 class="section-title"><i class="fas fa-cloud-sun" style="color: var(--gold-premium)"></i> Environment Microclimate</h2>
+            <div class="glass-card" style="padding: 2rem; text-align: center; display: flex; flex-direction: column; justify-content: center; height: 320px;">
+                <div id="weatherWidget" style="font-size: 1.1rem; color: var(--text-dark); font-weight: 600;">
+                    <i class="fas fa-spinner fa-pulse" style="font-size: 2rem; color: var(--gold-premium); margin-bottom: 1rem; display:block;"></i> Analysing weather satellite feeds...
+                </div>
+            </div>
+        </div>
+        <div style="flex: 1.2; min-width: 280px;" data-aos="fade-left">
+            <h2 class="section-title"><i class="fas fa-train" style="color: var(--gold-premium)"></i> Access Hub Nodes</h2>
+            <div class="glass-card" style="padding: 2rem; display: flex; flex-direction: column; justify-content: center; height: 320px; gap: 0.8rem;">
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.7rem; font-size: 0.95rem;">
+                    <li style="color: var(--text-muted)"><i class="fas fa-subway" style="color: var(--primary-medium); width: 24px;"></i> <strong>Railhead Node:</strong> Anantnag J&K ~12km</li>
+                    <li style="color: var(--text-muted)"><i class="fas fa-plane" style="color: var(--primary-medium); width: 24px;"></i> <strong>Aviation Terminal:</strong> Srinagar (SXR) ~55km</li>
+                    <li style="color: var(--text-muted)"><i class="fas fa-shield-alt" style="color: var(--primary-medium); width: 24px;"></i> <strong>Police Jurisdiction:</strong> Bijbehara ~4km</li>
+                    <li style="color: var(--text-muted)"><i class="fas fa-gavel" style="color: var(--primary-medium); width: 24px;"></i> <strong>Judiciary Desk:</strong> District HQ Anantnag ~8km</li>
+                    <li style="color: var(--text-muted)"><i class="fas fa-bus" style="color: var(--primary-medium); width: 24px;"></i> <strong>Transit Bus Bay:</strong> Bijbehara Station Line</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 2rem; max-width: 1200px; margin: 0 auto; font-size: 0.95rem;">
+        <div><i class="fas fa-heart" style="color: var(--gold-premium);"></i> Wopzan General Panchayat Council | Digital Rural Governance Initiative</div>
+        <div><i class="fab fa-instagram" style="color: var(--gold-premium)"></i> PR Desk Handle: @suuihaib</div>
+        <div>Emergency Response Call Center: 112 / 108</div>
+    </div>
+    <div style="text-align: center; margin-top: 3rem; font-size: 0.85rem; color: rgba(226,240,230,0.6); border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.5rem;">
+        © 2026 Wopzan Corporate Informatics Council — Preserving Cultural Heritage through Modern Framework Architecture.
+    </div>
+</footer>
+
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+<script>
+    // Smooth Animation Framework Deployment
+    AOS.init({ duration: 1000, once: true, offset: 60, easing: 'ease-out-cubic' });
+
+    // Core Architecture Configuration Mapping
+    const firebaseConfig = {
+        apiKey: "AIzaSyDkLXTTJPK45ZUDhuhn7irMGvGux35pnXk",
+        authDomain: "wopzan-village.firebaseapp.com",
+        databaseURL: "https://wopzan-village-default-rtdb.firebaseio.com",
+        projectId: "wopzan-village",
+        storageBucket: "wopzan-village.firebasestorage.app",
+        messagingSenderId: "396123456350",
+        appId: "1:396123456350:web:5548e36135cb6835a4c9ff"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    const CLOUDINARY_CLOUD_NAME = "dwnjtvvfq"; 
+    const CLOUDINARY_UPLOAD_PRESET = "ml_default"; 
+    const ADMIN_PASSWORD = "wopzan2026"; 
+
+    let announcements = [];
+    let galleryImages = [];
+
+    // Continuous Sync Listeners
+    database.ref('announcements').on('value', (snapshot) => {
+        announcements = [];
+        snapshot.forEach((childSnapshot) => {
+            announcements.push({ id: childSnapshot.key, ...childSnapshot.val() });
+        });
+        renderAnnouncements();
+    });
+
+    database.ref('gallery').on('value', (snapshot) => {
+        galleryImages = [];
+        snapshot.forEach((childSnapshot) => {
+            galleryImages.push({ id: childSnapshot.key, ...childSnapshot.val() });
+        });
+        renderGallery();
+    });
+
+    function renderAnnouncements() {
+        const container = document.getElementById('announcementsList');
+        if(!container) return;
+        if(announcements.length === 0) { 
+            container.innerHTML = '<div class="announcement-item">✨ No bulletin notices documented yet.</div>'; 
+            return; 
+        }
+        container.innerHTML = announcements.slice().reverse().map(ann => `
+            <div class="announcement-item" data-aos="fade-left">
+                <div style="display: flex; justify-content: space-between; align-items:center;">
+                    <strong style="color: var(--primary-deep); font-size:1.1rem;"><i class="fas fa-megaphone" style="color: var(--gold-premium)"></i> ${escapeHtml(ann.title)}</strong>
+                    <button class="delete-announce" data-id="${ann.id}" style="background: none; border: none; color:#e74c3c; cursor:pointer; font-size:1rem; transition: transform 0.2s;"><i class="fas fa-trash-alt"></i></button>
+                </div>
+                <p style="margin: 8px 0; color: var(--text-muted); font-size:0.98rem;">${escapeHtml(ann.desc)}</p>
+                <small style="color: var(--text-muted); font-weight:600;"><i class="far fa-clock"></i> ${ann.timestamp}</small>
+            </div>
+        `).join('');
+
+        // Protected Elimination Callbacks
+        document.querySelectorAll('.delete-announce').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const id = btn.getAttribute('data-id');
+                const passwordInput = prompt("🔐 Authentication Needed:\nEnter Admin Password to drop announcement record:");
+                if (passwordInput === null) return; 
+
+                if (passwordInput === ADMIN_PASSWORD) {
+                    database.ref('announcements/' + id).remove()
+                        .then(() => alert("🗑️ Bulletin entry eliminated cleanly."))
+                        .catch(err => alert("❌ Transaction processing error: " + err.message));
+                } else {
+                    alert("❌ Violation Warning: Invalid credentials.");
+                }
+            });
+        });
+    }
+
+    function renderGallery() {
+        const container = document.getElementById('galleryGrid');
+        if(!container) return;
+        if(galleryImages.length === 0) { 
+            container.innerHTML = '<div style="text-align:center; padding: 2rem; width:100%; color: var(--text-muted);">🌄 Media array empty. Initiate first repository upload upload!</div>'; 
+            return; 
+        }
+        container.innerHTML = galleryImages.map(img => `
+            <div class="gallery-card" onclick="openLightbox('${img.dataUrl}')" data-aos="zoom-in">
+                <div style="overflow:hidden; position:relative;">
+                    <img src="${img.dataUrl}" alt="Wopzan Community Asset">
+                    <div class="delete-img" data-id="${img.id}" style="position:absolute; top:12px; right:12px; background:rgba(7,24,16,0.8); backdrop-filter:blur(5px); color:#ff6b6b; padding:6px 12px; border-radius:30px; cursor:pointer; font-size:11px; z-index:10; font-weight:700; border: 1px solid rgba(255,255,255,0.15);">🗑️ DELETE</div>
+                </div>
+                ${img.caption ? `<div style="padding: 12px 16px; background:#ffffff; font-weight:600; font-size:0.9rem; color: var(--primary-deep); border-top:1px solid #f5f7f6;">${escapeHtml(img.caption)}</div>` : ''}
+            </div>
+        `).join('');
+
+        document.querySelectorAll('.delete-img').forEach(el => {
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const id = el.getAttribute('data-id');
+                const passwordInput = prompt("🔐 Access Control Protocol:\nEnter Admin Code to flush image artifact:");
+                if (passwordInput === null) return; 
+
+                if (passwordInput === ADMIN_PASSWORD) {
+                    database.ref('gallery/' + id).remove()
+                        .then(() => alert("🗑️ Asset erased from database array."))
+                        .catch(err => alert("❌ Target drop execution fault: " + err.message));
+                } else {
+                    alert("❌ Execution Refused: Sublevel access authorization missing.");
+                }
+            });
+        });
+    }
+
+    function openLightbox(url) {
+        const lightbox = document.getElementById('imageLightbox');
+        const lightboxImg = document.getElementById('lightboxMainImg');
+        if(lightbox && lightboxImg) {
+            lightboxImg.src = url;
+            lightbox.classList.add('active');
+        }
+    }
+
+    document.getElementById('closeLightboxBtn')?.addEventListener('click', () => {
+        document.getElementById('imageLightbox').classList.remove('active');
+    });
+    document.getElementById('imageLightbox')?.addEventListener('click', (e) => {
+        if(e.target === document.getElementById('imageLightbox')) {
+            document.getElementById('imageLightbox').classList.remove('active');
+        }
+    });
+
+    document.getElementById('announceForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const title = document.getElementById('announceTitle').value.trim();
+        const desc = document.getElementById('announceDesc').value.trim();
+        if(!title || !desc) return;
+
+        database.ref('announcements').push({
+            title: title,
+            desc: desc,
+            timestamp: new Date().toLocaleString()
+        }).then(() => {
+            document.getElementById('announceForm').reset();
+            alert('✅ Transmission Matrix Synchronised: Notice live.');
+        });
+    });
+
+    // Asset Transporter Pipeline
+    const fileInput = document.getElementById('imageUploadInput');
+    if(fileInput) {
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if(file && file.type.startsWith('image/')) {
+                
+                alert('⏳ Commencing cloud data pipeline sequence. Please standby...');
+
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+                fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.secure_url) {
+                        database.ref('gallery').push({
+                            dataUrl: data.secure_url,
+                            caption: "📸 Verified Community Media Contribution"
+                        });
+                        alert('📸 Media stack transmission successful. Live in index gallery.');
+                    } else {
+                        alert('❌ Gateway Rejection: ' + (data.error ? data.error.message : 'Bad Unsigned Preset Descriptor.'));
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('❌ Connection timeout. Intermittent packets dropped. Check connection.');
+                });
+            }
+            fileInput.value = '';
+        });
+    }
+
+    // Weather API Core Module Integration
+    async function fetchWeather() {
+        const weatherDiv = document.getElementById('weatherWidget');
+        try {
+            const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=33.7302&longitude=75.1479&current_weather=true&timezone=Asia/Kolkata');
+            const data = await res.json();
+            if(data.current_weather) {
+                weatherDiv.innerHTML = `
+                    <div style="animation: modalFadeUp 0.6s ease;">
+                        <i class="fas fa-cloud-sun" style="font-size: 3.5rem; color: var(--gold-premium); margin-bottom:1rem; display:block;"></i>
+                        <h4 style="font-size: 2.5rem; font-weight:800; color:var(--primary-deep); margin-bottom:0.2rem;">${data.current_weather.temperature}°C</h4>
+                        <p style="color: var(--text-muted); font-size:0.9rem; font-weight:600;"><i class="fas fa-wind"></i> Wind Vectors: ${data.current_weather.windspeed} km/h</p>
+                        <span style="display:inline-block; background:rgba(19,82,55,0.08); color:var(--primary-medium); padding:5px 16px; border-radius:40px; font-size:0.85rem; font-weight:700; margin-top:1rem;">🌲 Microclimate Stable</span>
+                    </div>`;
+            } else weatherDiv.innerHTML = '🌤️ Index baseline readings read 22°C.';
+        } catch(err) { weatherDiv.innerHTML = '🌱 Regional forecast system offline. Nominal ambient temperature logged.'; }
+    }
+
+    function initMap() {
+        const map = L.map('villageMap', { scrollWheelZoom: false }).setView([33.752, 75.104], 13);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '© OpenStreetMap' }).addTo(map);
+        
+        const customIcon = L.divIcon({
+            className: 'custom-div-icon',
+            html: "<div style='background-color:var(--primary-deep); width:14px; height:14px; border-radius:50%; border:3px solid var(--gold-premium); box-shadow:0 0 10px rgba(0,0,0,0.3);'></div>",
+            iconSize: [14, 14],
+            iconAnchor: [7, 7]
+        });
+
+        L.marker([33.752, 75.104], {icon: customIcon}).addTo(map)
+            .bindPopup('<b style="font-family:\'Playfair Display\',serif; color:var(--primary-deep); font-size:1.1rem;">🌟 Wopzan Village HQ</b><br><span style="color:var(--text-muted)">Tehsil Bijbehara, Anantnag</span>')
+            .openPopup();
+    }
+
+    function initPopup() {
+        const modal = document.getElementById('instaModal');
+        const closeBtn = document.getElementById('closeModalBtn');
+        if(!sessionStorage.getItem('wopzanPopupShown')) {
+            setTimeout(() => modal.classList.add('active'), 1500);
+            sessionStorage.setItem('wopzanPopupShown', 'true');
+        }
+        closeBtn?.addEventListener('click', () => modal.classList.remove('active'));
+        modal?.addEventListener('click', (e) => { if(e.target === modal) modal.classList.remove('active'); });
+    }
+
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if(m === '&') return '&';
+            if(m === '<') return '<';
+            if(m === '>') return '>';
+            return m;
+        });
+    }
+
+    fetchWeather();
+    initMap();
+    initPopup();
+</script>
+</body>
+</html>
